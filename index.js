@@ -6,9 +6,6 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
- // gets current deployed domain
-
-
 
 app.listen(port, () => console.log("Server is listening on port", port));
 
@@ -78,14 +75,13 @@ app.post("/check-password", async (req, res) => {
 
 // Waiting page
 app.get("/waiting/:requestId", (req, res) => {
-    // const host = req.get('host');
     req.session.user == true
     const { requestId } = req.params;
     if (!pendingLogins[requestId]) {
         req.flash("error", "Invalid or expired request.");
         return res.redirect("/");
     }
-  res.render("waiting", { requestId });
+    res.render("waiting", { requestId });
 });
 
 // Polling approval status
@@ -142,7 +138,7 @@ app.get("/secret-message", (req, res) => {
     } else {
         req.flash("error", "You should log in first.");
         res.redirect("/");
-    }
+    // }
 });
 
 // Feedback form submission
