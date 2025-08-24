@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Secure Access</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <style>
+      .spinner-grow-lg {
+        width: 3rem;
+        height: 3rem;
+      }
+    </style>
+  </head>
+  <body class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-5">
+          <div class="card shadow-lg border-0 rounded-4">
+
+            <% if (error && error.length > 0) { %>
+            <div class="alert alert-danger mb-3" role="alert">
+              <%= error %>
+            </div>
+            <% } %>
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">🔒 Secure Access</h5>
+            </div>
+
+            <div class="card-body p-4">
+              <form id="passwordForm" method="POST" action="/check-password">
+                <div class="form-floating mb-2">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="passwordInput"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                  <label for="passwordInput">Password</label>
+                </div>
+                <p class="text-info small mb-2">Hint: this is a hint</p>
+
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" id="showPassword" />
+                  <label class="form-check-label" for="showPassword">Show password</label>
+                </div>
+
+                <div class="d-grid mb-2">
+                  <button class="btn btn-primary btn-lg d-flex align-items-center justify-content-center gap-2" type="submit">
+                    <span class="spinner-grow spinner-grow-sm d-none" id="submitSpinner"></span>
+                    <span id="submitText">Unlock</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Toast -->
+          <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+            <div id="statusToast" class="toast align-items-center border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body" id="toastMessage">Processing...</div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approval Modal -->
+    <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow text-center p-4">
+          <h5 class="mb-3">Waiting for Owner Approval</h5>
+          <div class="spinner-border spinner-grow-lg text-primary mb-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p>Please wait until the owner approves your login request.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Show / Hide password
+      const showPassword = document.getElementById("showPassword");
+      const passwordInput = document.getElementById("passwordInput");
+      showPassword.addEventListener("change", () => {
+        passwordInput.type = showPassword.checked ? "text" : "password";
+      });
+
+      // Spinner + Toast on submit
+      const form = document.getElementById("passwordForm");
+      const submitSpinner = document.getElementById("submitSpinner");
+      const submitText = document.getElementById("submitText");
+      const toast = new bootstrap.Toast(document.getElementById("statusToast"));
+      const toastMessage = document.getElementById("toastMessage");
+
+      form.addEventListener("submit", () => {
+        submitSpinner.classList.remove("d-none");
+        submitText.textContent = "Verifying...";
+        toastMessage.textContent = "🔄 Checking password...";
+        toast.show();
+      });
+
+      // Show modal if requestSent=true
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('requestSent') === 'true') {
+        const requestModal = new bootstrap.Modal(document.getElementById('requestModal'));
+        requestModal.show();
+      }
+    </script>
+  </body>
+</html>
