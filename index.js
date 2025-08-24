@@ -6,6 +6,9 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
+const host = req.get('host'); // gets current deployed domain
+
+
 
 app.listen(port, () => console.log("Server is listening on port", port));
 
@@ -81,7 +84,7 @@ app.get("/waiting/:requestId", (req, res) => {
         req.flash("error", "Invalid or expired request.");
         return res.redirect("/");
     }
-    res.render("waiting", { requestId });
+  res.render("waiting", { requestId, host });
 });
 
 // Polling approval status
