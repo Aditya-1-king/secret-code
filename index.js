@@ -148,3 +148,7 @@ app.post("/user/message", async (req, res) => {
     req.flash("success", "Your message was sent to the developer");
     res.redirect("/secret-message");
 });
+
+app.get("/readme",(req,res)=>{
+    res.render("readme.ejs")
+})

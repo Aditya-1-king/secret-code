@@ -14,6 +14,46 @@
         width: 3rem;
         height: 3rem;
       }
+/* Centered container for the README button */
+.readme-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+/* README Button Style */
+.readme-btn {
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #f8f9fa;
+    background: linear-gradient(135deg, #6c63ff, #9a7dff);
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.readme-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: skewX(-25deg);
+    transition: left 0.5s ease;
+}
+.readme-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.6);
+}
+.readme-btn:hover::after {
+    left: 125%;
+}
+
     </style>
   </head>
   <body class="min-vh-100 d-flex align-items-center justify-content-center">
@@ -74,7 +114,9 @@
         </div>
       </div>
     </div>
-    <a href="/views/readme.ejs">README</a>
+<div class="readme-container">
+    <a href="/readme" class="readme-btn">📄 View README</a>
+</div>
 
     <!-- Approval Modal -->
     <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
