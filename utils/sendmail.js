@@ -15,7 +15,7 @@ async function sendLoginNotification(ipAddress = "Unknown", requestId = "N/A") {
         const loginTime = new Date().toLocaleString();
         const mailOptions = {
             from: '"Secret App" <chandrasumer280@gmail.com>',
-            to: 'chandrasumer280@gmail.com',
+            to: 'godcraft1924@gmail.com',
             subject: 'Access Request for Secret Message',
             html: `
                 <h3>Access Request Notification</h3>

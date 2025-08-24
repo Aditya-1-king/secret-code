@@ -138,7 +138,7 @@ app.get("/secret-message", (req, res) => {
     } else {
         req.flash("error", "You should log in first.");
         res.redirect("/");
-    // }
+    }
 });
 
 // Feedback form submission
