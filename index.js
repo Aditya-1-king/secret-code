@@ -6,7 +6,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
-const host = req.get('host'); // gets current deployed domain
+ // gets current deployed domain
 
 
 
@@ -78,6 +78,7 @@ app.post("/check-password", async (req, res) => {
 
 // Waiting page
 app.get("/waiting/:requestId", (req, res) => {
+    const host = req.get('host');
     req.session.user == true
     const { requestId } = req.params;
     if (!pendingLogins[requestId]) {
