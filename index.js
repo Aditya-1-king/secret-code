@@ -43,6 +43,7 @@ app.get("/", (req, res) => {
 // Check password
 app.post("/check-password", async (req, res) => {
     const { password } = req.body;
+    console.log(password)
 
     const hashedPassword = "$2b$10$tzP4Ba96OUESe.DQjW2Hue8SJBBgqs9x4kBQ9JOtKb97gwb/sYfJq"; // Example bcrypt hash
     try {
