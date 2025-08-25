@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
 app.post("/check-password", async (req, res) => {
     const { password } = req.body;
 
-    const hashedPassword = "$2b$10$YUvOveFI0FCgOrqq8pJZPeeIsXRO8ZBvXH0BQK1UvZ2zSLCHgqQda"; // Example bcrypt hash
+    const hashedPassword = "$2b$10$tDO0SYsldzyg840EJVm68OiHTNWDqsWz6V8ZFK4oQfCgJ8IFEk3RC"; // Example bcrypt hash
     try {
         const match = await bcrypt.compare(password, hashedPassword);
         if (!match) {
