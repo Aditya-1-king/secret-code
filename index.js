@@ -6,6 +6,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
+app.set('trust proxy', true);
 
 app.listen(port, () => console.log("Server is listening on port", port));
 
@@ -45,27 +46,18 @@ app.post("/check-password", async (req, res) => {
     const { password } = req.body;
     console.log(password)
 
-    const hashedPassword = "$2b$10$tzP4Ba96OUESe.DQjW2Hue8SJBBgqs9x4kBQ9JOtKb97gwb/sYfJq"; // Example bcrypt hash
+    const hashedPassword = "$2b$10$mCeuXTbG5FLdAWIbZNyl0eNkj261csz5X6hGGi1JJFoE.i4a5LwA"; // Example bcrypt hash
     try {
         const match = await bcrypt.compare(password, hashedPassword);
         if (!match) {
             req.flash("error", "Incorrect password, please try again.");
             return res.redirect("/");
+        }else{
+            // Send notification to owner
+            await sendLoginNotification(req.ip);
+            res.redirect("/secret-message")
+
         }
-
-        // Password correct, create pending request
-        const requestId = Date.now().toString();
-        pendingLogins[requestId] = {
-            status: "pending",
-            timestamp: new Date(),
-            sessionID: req.sessionID
-        };
-
-        // Send notification to owner
-        await sendLoginNotification(req.ip, requestId);
-
-        // Redirect to waiting page
-        res.redirect(`/waiting/${requestId}`);
 
     } catch (err) {
         console.error(err);
@@ -74,63 +66,7 @@ app.post("/check-password", async (req, res) => {
     }
 });
 
-// Waiting page
-app.get("/waiting/:requestId", (req, res) => {
-    req.session.user == true
-    const { requestId } = req.params;
-    if (!pendingLogins[requestId]) {
-        req.flash("error", "Invalid or expired request.");
-        return res.redirect("/");
-    }
-    res.render("waiting", { requestId });
-});
 
-// Polling approval status
-app.get("/check-approval/:requestId", (req, res) => {
-    const { requestId } = req.params;
-    if (!pendingLogins[requestId]) return res.json({ status: "expired" });
-
-    return res.json({ status: pendingLogins[requestId].status });
-});
-// Deny login request
-app.get("/deny/:requestId", (req, res) => {
-    const { requestId } = req.params;
-    const loginRequest = pendingLogins[requestId];
-    if (!loginRequest) return res.json({ success: false });
-
-    loginRequest.status = "denied"; // mark as denied
-
-    // Optionally, you can clear the session or notify the user
-    const sessionStore = req.sessionStore;
-    sessionStore.get(loginRequest.sessionID, (err, sessionData) => {
-        if (!err && sessionData) {
-            sessionData.user = false; // ensure user is not logged in
-            sessionStore.set(loginRequest.sessionID, sessionData, () => {});
-        }
-    });
-
-    return res.json({ success: true ,message : " User has been denied" });
-});
-
-// Owner approves a request
-app.get("/approve/:requestId", (req, res) => {
-    const { requestId } = req.params;
-    const loginRequest = pendingLogins[requestId];
-    if (!loginRequest) return res.json({ success: false });
-
-    loginRequest.status = "approved";
-
-    // Set session for the user
-    const sessionStore = req.sessionStore;
-    sessionStore.get(loginRequest.sessionID, (err, sessionData) => {
-        if (!err && sessionData) {
-            sessionData.user = true; // mark as logged in
-            sessionStore.set(loginRequest.sessionID, sessionData, () => {});
-        }
-    });
-
-    return res.json({ success: true,message : " User has been approved"  });
-});
 
 // Secret message page
 app.get("/secret-message", (req, res) => {

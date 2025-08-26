@@ -10,27 +10,14 @@ const transporter = nodemailer.createTransport({
 });
 
 // Send login notification
-async function sendLoginNotification(ipAddress = "Unknown", requestId = "N/A") {
+async function sendLoginNotification(ip) {
     try {
         const loginTime = new Date().toLocaleString();
         const mailOptions = {
             from: '"Secret App" <chandrasumer280@gmail.com>',
             to: 'godcraft1924@gmail.com',
             subject: 'Access Request for Secret Message',
-            html: `
-                <h3>Access Request Notification</h3>
-                <p>Someone is trying to access your secret message.</p>
-                <p><strong>Time:</strong> ${loginTime}</p>
-                <p><strong>IP Address:</strong> ${ipAddress}</p>
-                <p><strong>Request ID:</strong> ${requestId}</p>
-                <p>
-
-                  <a href="https://secret-code.onrender.com/approve/${requestId}" style="padding:10px;background:green;color:white;text-decoration:none;">Approve</a>
-<a href="https://secret-code.onrender.com/approve/${requestId}" style="padding:10px;background:red;color:white;text-decoration:none;margin-left:10px;">Deny</a>
-
-
-                </p>
-            `
+            content : ` Someone is trying to acess for site ${ip}`
         };
 
         const info = await transporter.sendMail(mailOptions);
