@@ -55,6 +55,7 @@ app.post("/check-password", async (req, res) => {
             return res.redirect("/");
         }else{
             // Send notification to owner
+            req.session.user == true
             await sendLoginNotification(req.ip);
             res.redirect("/secret-message")
 
