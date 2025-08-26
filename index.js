@@ -6,6 +6,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
+const hashPassword = require("./hashpassword.js")
 app.set('trust proxy', true);
 
 app.listen(port, () => console.log("Server is listening on port", port));
@@ -46,7 +47,7 @@ app.post("/check-password", async (req, res) => {
     const { password } = req.body;
     console.log(password)
 
-    const hashedPassword = "$2b$10$mCeuXTbG5FLdAWIbZNyl0eNkj261csz5X6hGGi1JJFoE.i4a5LwA"; // Example bcrypt hash
+    const hashedPassword = await hashPassword("TONY STARK"); // Example bcrypt hash
     try {
         const match = await bcrypt.compare(password, hashedPassword);
         if (!match) {
