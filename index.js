@@ -6,7 +6,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const bcrypt = require("bcrypt");
 const { sendLoginNotification, sendMessage } = require("./utils/sendmail.js");
-const hashPassword = require("./hashpassword.js")
+// const hashPassword = require("./hashpassword.js")
 app.set('trust proxy', true);
 
 app.listen(port, () => console.log("Server is listening on port", port));
@@ -45,20 +45,24 @@ app.get("/", (req, res) => {
 // Check password
 app.post("/check-password", async (req, res) => {
     const { password } = req.body;
-    console.log(password)
 
-    const hashedPassword = await hashPassword("TONY STARK"); // Example bcrypt hash
+    // Pre-hashed password for "TONY STARK"
+    const hashedPassword = "$2b$10$8p.PIN5.lIK5krSoLgkJqu25K6AtinrXSsCeeMUlD7wHibB/DNoC6";
+
     try {
         const match = await bcrypt.compare(password, hashedPassword);
+
         if (!match) {
             req.flash("error", "Incorrect password, please try again.");
             return res.redirect("/");
-        }else{
-            // Send notification to owner
-            req.session.user == true
-            await sendLoginNotification(req.ip);
-            res.redirect("/secret-message")
+        } else {
+            // ✅ Set session flag
+            req.session.user = true;
 
+            // ✅ Notify owner with IP
+            await sendLoginNotification(req.ip);
+
+            return res.redirect("/secret-message");
         }
 
     } catch (err) {
@@ -67,8 +71,6 @@ app.post("/check-password", async (req, res) => {
         res.redirect("/");
     }
 });
-
-
 
 // Secret message page
 app.get("/secret-message", (req, res) => {
@@ -79,6 +81,7 @@ app.get("/secret-message", (req, res) => {
         res.redirect("/");
     }
 });
+
 
 // Feedback form submission
 app.post("/user/message", async (req, res) => {

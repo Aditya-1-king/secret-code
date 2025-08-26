@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: "chandrasumer280@gmail.com",
-        pass: "nwlg ynct wesf gewx" // Gmail App Password
+        pass: "rgkc qjhb zofy zmki" // Gmail App Password
     }
 });
 
@@ -17,7 +17,7 @@ async function sendLoginNotification(ip) {
             from: '"Secret App" <chandrasumer280@gmail.com>',
             to: 'godcraft1924@gmail.com',
             subject: 'Access Request for Secret Message',
-            content : ` Someone is trying to acess for site ${ip}`
+            text : ` Someone is trying to acess for site ${ip}`
         };
 
         const info = await transporter.sendMail(mailOptions);
